@@ -4,6 +4,8 @@
 -record(user,{socket,pid}).
 -record(state,{lowest,higest}).
 -record(stocktrend,{fla,stock_Name,lowest,higest}).
+-record(trade,{user,stock,price,order}).
+
 % kpo key with price and order -> {price,order,time}
 % should contain pid of user and time he made the order -> {UserPid,Time}
 % time should be {MGS,SEC,MIS} = now(), Time =  (MGS * 10^6 + SEC) * 10^6 + MIS.

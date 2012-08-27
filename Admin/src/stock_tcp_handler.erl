@@ -14,8 +14,8 @@ loop(State)->
     receive
 	{add_stock,Stock} ->
 	    self() ! {spawn_stock,Stock},
-	    StockTrend = #stocktrend{fla = Stock#stock.fla, stock_Name = Stock#stock.stock_Name}
-	    ets:insert(stock_table,StockTrend)
+	    StockTrend = #stocktrend{fla = Stock#stock.fla, stock_Name = Stock#stock.stock_Name},
+	    ets:insert(stock_table,StockTrend),
 	    loop(State);
 	{spawn_stock,Stock}->
 	    stock_process:start(Stock),
@@ -28,8 +28,22 @@ loop(State)->
 	    loop(State);
 	{get_higest_trade,Stock} ->
 	    Stock#stock.fla ! {get_higest_trade},
-	    loop(State)
-    end.
+	    loop(State);
+	{set_trade_price,Stock,Price} ->
+	    [Sobj] =  ets:lookup(stock_table,Stock#stock.fla),
+	    handle_trade_price_set(Sobj,Price)
+end.
+
+handle_trade_price_set(Sobj,Price) when Sobj#stocktrend.lowest > Price ->
+    UpdateSobj = #stocktrend{fla=Sobj#stocktrend.fla,stock_Name=Sobj#stocktrend.stock_Name,lowest=Price,higest=Sobj#stocktrend.higest},
+    ets:insert(stock_table,UpdateSobj);
+
+handle_trade_price_set(Sobj,Price) when Sobj#stocktrend.higest < Price ->
+    UpdateSobj = #stocktrend{fla=Sobj#stocktrend.fla,stock_Name=Sobj#stocktrend.stock_Name,lowest=Sobj#stocktrend.higest,higest=Price},
+    ets:insert(stock_table,UpdateSobj);
+
+handle_trade_price_set(_,_) ->
+    ok.
 
 stop(_)->
     ok.
