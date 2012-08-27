@@ -30,3 +30,15 @@ get_higest_trade(Stock) ->
 	{'EXIT',{badarg,_}}-> "please wait untill tcp_shandler starts";
 	_ -> "Request sent"
     end.
+
+audit_trade(Stock)->
+        case catch   trade_process ! {audit,Stock,spawn(?MODULE,auditreceive,[])} of
+	{'EXIT',{badarg,_}} -> "please wait untill tcp_shandler starts";
+	_ -> "Request sent"
+	end.
+
+auditreceive()->
+    receive
+	Audit ->	
+	    io:format("Audit of stock is ~w",[Audit])
+    end.

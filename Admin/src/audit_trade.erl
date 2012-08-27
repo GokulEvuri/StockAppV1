@@ -14,7 +14,7 @@
 
 
 start() ->
-    spawn(trade_process, init, [self()]).
+   register(trade_process, spawn_link(?MODULE, init, [self()])).
 
 init(From) ->
     ets:new(trade_db,[bag,public,{keypos,#trade.stock},named_table]),

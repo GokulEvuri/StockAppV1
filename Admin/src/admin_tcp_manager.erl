@@ -3,8 +3,10 @@
 -define(ListenPort,8091).
 -compile(export_all).
 
-
 start()->
+    spawn(?MODULE,start_manager,[]).
+
+start_manager()->
     case  gen_tcp:listen(?ListenPort,[binary,{packet,2},{active,false}]) of
 	{ok,ListenSock} ->
 	    start_server(ListenSock);

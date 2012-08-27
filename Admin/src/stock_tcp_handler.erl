@@ -3,11 +3,12 @@
 -compile(export_all).
 
 start(_,_)->
-    register(tcp_shandler, AppPid = spawn(test,init,[[]])),
-    ets:new(stock_table,[set,public,named_table,{keypos,#stocktrend.fla}]),
+    AppPid = spawn(?MODULE,init,[[]]),
+    register(tcp_shandler, AppPid),
     {ok, AppPid}.
 
 init(State)->
+    ets:new(stock_table,[set,public,named_table,{keypos,#stocktrend.fla}]),
     loop(State).
 
 loop(State)->
