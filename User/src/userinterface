@@ -1,0 +1,20 @@
+Preface: This system provides no gaurenty. 
+The system may not provide the expected performance and results if not been used following the manual (or) instructions you obtained with this version of system.
+
+To start the application on server side.
+
+{ok,Pid} = application:start(stockapp).
+
+To add a stock to stockapp
+-There are two ways to do this:
+     either you can send {add_stock,Stock} to Pid, like 
+     Pid ! {add_stock,Stock} % where Stock is a record defined as (stock,{fla,stock_Name}), and fla -> four letter abbrivation for the stock.
+     or just use function from test module 
+     test:add_stock(Stock)
+     and same applies for stock.
+
+Note: while adding new stocks Fla and Stock_name shouldn't match any names which are already existed in stock list.
+
+
+The order con only hold for 10,000 milli seconds, with the best price.
+When a confirmation is not made in between then the order will be cancelled.

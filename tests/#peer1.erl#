@@ -1,0 +1,9 @@
+-module(peer1).
+
+-compile(export_all).
+
+
+
+start() ->
+    {ok,LS} = gen_tcp:listen(8091,[{active,true},binary]),
+    gen_tcp:accept(LS).
